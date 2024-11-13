@@ -54,4 +54,4 @@ IoT 기술을 가정에 접목하여 각종 센서와 액츄에이터들을 활�
 
 | ProFile | Role | Part | Tech Stack |
 |:--------:|:--------:|:--------:|:--------:|
-| ![KakaoTalk_20241113_230554223](https://github.com/user-attachments/assets/986e1819-2d0d-4715-97ce-590ea6495421) <br> [강송구](https://github.com/Throwball99) |   팀원  |   HW, SW |   Arduino, Fusion 360 |
+| ![KakaoTalk_20241113_230554223](https://github.com/user-attachments/assets/986e1819-2d0d-4715-97ce-590ea6495421) <br> [강송구](https://github.com/Throwball99) |   팀원  |   HW, SW |   Atmel Studio, C |
