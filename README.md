@@ -1,62 +1,119 @@
-# 작품명: Atmega128 2개를 이용한 스마트 도어락과 IoT 시스템 [마이크로프로세서2 텀프로젝트]
+# 🔐 ATmega128 기반 스마트 도어락 & IoT 하우스 제어 시스템
 
-***작품의 동작 내용은 영상을 참고***
-(유튜브 링크 : https://youtu.be/PdQAkpsblVo)
+2개의 ATmega128 MCU를 UART로 연결하여, 도어락 시스템과 스마트 하우스 제어 기능을 분리·통합한 프로젝트입니다.  
+비밀번호/RFID 기반 출입, EEPROM 사용자 설정 저장, 센서 기반 환경 제어, 릴레이를 통한 가전 제어,  
+PWM 제어를 통한 서보모터 자동창문 제어 등 다양한 임베디드 제어 기술을 활용하여  
+실제 모델하우스와 유사한 구조를 구현했습니다.
 
-Atmega128 2개를 활용하여 도어락과 스마트 홈 제어 기능을 하게 만들어서 스마트 홈을 구현한 프로젝트
+---
 
-***파일 설명***
-- document : 보고서 파일
-- mainCode : 도어락과 제어부의 코드
-- testCode : 각 센서 및 액츄에이터 구현 코드
+## 📌 핵심 기술 요약
 
-## 배경
+- 🔁 **MCU 통신**: 2개의 ATmega128 UART 연결 (도어락 <-> 스마트홈 제어)
+- 📷 **센서 활용**: 조도, 가스, 수위, 초음파, 온습도 등 6종 이상
+- 🛡 **출입 제어**: EEPROM 기반 비밀번호, RFID 카드 등록/삭제 기능
+- 🔌 **릴레이 제어**: 가전제품 제어 (에어컨, 가습기 등)
+- 🔄 **PWM 제어**: 서보모터로 문/창문 자동 제어
+- ⚠️ **Watchdog Timer**: MCU 비정상 상태 복구
+- ⏱ **인터럽트 처리**: 버튼, 타이머 이벤트 등 안정적 시나리오 처리
 
-IoT 기술을 가정에 접목하여 각종 센서와 액츄에이터들을 활용, 모델 하우스에 구현하여 마이크로프로세서2에서 학습한 내용들에 대해 이해도를 높히기 위해 기획함
+---
 
-## 개발목표
+## 🏗️ 프로젝트 구조
 
-- 각종 센서(조도 센서, 온/습도 센서, 수위 센서, 가스 센서, 인체 감지 센서, 초음파 센서등)들을 활용하여 집의 데이터를 수집한다
-- 서보모터를 활용하여 문과 창문의 자동 개폐를 구현한다
-- 가습기, 에어컨, 멀티탭 등의 가전들을 릴레이 모듈을 이용해 제어한다
-- 비밀번호와 Rfid 카드로 열리는 도어락을 구현하고 사용자 정보들을 EEPROM에 저장하여 Rfid 카드 태그 시 그 설정을 불러온다
-- 센서로 수집한 데이터들을 이용하여 모델 하우스를 제어한다
-- 비밀번호 변경, Rfid 정보 초기화 등의 기능을 구현한다
-- Atmega128의 위치독을 사용하여 올바른 작동이 가능하게 한다
-  
-## 전체 흐름도
+```bash
+📁 document         - 개발 보고서 및 발표 자료
+📁 mainCode
+ ├── controlUnit.c - 스마트홈 제어부 코드
+ ├── doorLock.c    - 도어락 처리 코드
+ ├── RFIDControl.c/.h, UARTControl.c/.h, TWI.h - 각종 드라이버 모듈
+📁 testCode         - 센서별 테스트 코드 모음
+```
 
-### 도어락 흐름도
-![도어락 흐름도](https://github.com/user-attachments/assets/eca38503-9179-4801-8206-e4cc7ae823ed)
+---
 
-### 제어부 흐름도
-![제어부 흐름도](https://github.com/user-attachments/assets/073a3634-ddd3-48bc-ad6d-1f4c42ba70f1)
+## 🔁 MCU 역할 분담 및 통신 구조
 
-## Uart 데이터 패킷 구조
-![데이터 패킷](https://github.com/user-attachments/assets/9cfdd1aa-5fc0-4941-acab-6f847fc951f8)
+### 🧠 MCU 역할
 
-## 회로도
+- **도어락 MCU**
+  - 사용자 입력, 비밀번호, RFID 처리
+  - EEPROM 기반 사용자 설정 관리
+  - 제어부 MCU와 UART 통신으로 명령 송신
 
-### 도어락 회로도
-![도어락 회로도](https://github.com/user-attachments/assets/ece91a11-e34d-447f-a80c-1111ed658291)
+- **제어부 MCU**
+  - 센서 정보 수집 (조도, 가스, 수위, 온습도 등)
+  - 액츄에이터 제어 (서보모터, 릴레이)
+  - 환경 자동 제어 시나리오 실행
 
+### 📡 UART 통신 프로토콜
 
-### 제어부 회로도
-![제어부 회로도 1](https://github.com/user-attachments/assets/832fc948-5dd8-47a6-b7ee-9e728564179a)
-![제어부 회로도 2](https://github.com/user-attachments/assets/6c017a06-4fd7-4e65-bff9-c2e50f12ec17)
+- 형식: `[START][명령어][데이터][CRC][END]`
+- 예시:
+  - `"DOOR_UNLOCK"` → 문 열림 제어
+  - `"LIGHT_LOW"` → 조도에 따른 조명 제어
+  - `"SAVE_EEPROM"` → 사용자 설정 저장
 
-## 활용 기술
-- Uart, I2C, SPI 통신
-- 8 bit timer/counter, 16bit timer/counter
-- WatchDog Timer
-- Interrupt
-- etc
+---
 
-## 개발환경
-![개발환경](https://github.com/user-attachments/assets/658e5c49-5000-4e5a-887a-8bd084c46f9a)
+## 🖼️ 시스템 구성도
 
-## 팀원
+```
+[도어락 MCU]
+  ├── 버튼 입력
+  ├── RFID 인식
+  └── EEPROM 저장
+        │
+       UART
+        ↓
+[제어부 MCU]
+  ├── 센서 정보 수집
+  ├── 릴레이/모터 제어
+  └── 사용자 설정 자동 실행
+```
 
-| ProFile | Role | Part | Tech Stack |
-|:--------:|:--------:|:--------:|:--------:|
-| ![KakaoTalk_20241113_230554223](https://github.com/user-attachments/assets/986e1819-2d0d-4715-97ce-590ea6495421) <br> [강송구](https://github.com/Throwball99) |   팀원  |   HW, SW |   Atmel Studio, C |
+---
+
+## 📽️ 시연 영상
+
+[🔗 유튜브 시연 영상 보러가기](https://youtu.be/PdQAkpsblVo)
+
+---
+
+## 🧾 회로도
+
+- **도어락 회로도**  
+  ![도어락 회로도](https://github.com/user-attachments/assets/ece91a11-e34d-447f-a80c-1111ed658291)
+
+- **제어부 회로도**  
+  ![제어부 회로도](https://github.com/user-attachments/assets/832fc948-5dd8-47a6-b7ee-9e728564179a)
+
+---
+
+## ⚙️ 개발 환경
+
+| 항목     | 내용            |
+|----------|-----------------|
+| MCU      | ATmega128       |
+| 언어     | C               |
+| 개발툴   | Atmel Studio 7  |
+| 디버깅   | JTAGICE3         |
+| 컴파일러 | avr-gcc         |
+
+---
+
+## 👤 팀원
+
+| 이름       | 역할              | 기술 스택                               |
+|------------|-------------------|------------------------------------------|
+| 강송구     | HW & FW 설계/개발 | ATmega128, UART, EEPROM, PWM, 센서제어 등 |
+| 팀원 2~3명 | UI/보고서/모듈 보조 | 회로 설계, 테스트, 발표자료 등 |
+
+---
+
+## 📌 프로젝트 핵심 요약
+
+> 이 프로젝트는 단순한 센서제어를 넘어,  
+> **2개의 MCU가 통신하며 각자 역할을 분담하는 구조**,  
+> **센서 수집 → 판단 → 액츄에이터 제어**의 루프를 포함하는  
+> **실제 임베디드 제어 흐름을 완성도 있게 구현**한 결과물입니다.
