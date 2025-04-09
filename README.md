@@ -56,12 +56,6 @@ PWM 제어를 통한 서보모터 자동창문 제어 등 다양한 임베디드
 
 ![데이터 패킷](https://github.com/user-attachments/assets/9cfdd1aa-5fc0-4941-acab-6f847fc951f8)
 
-- 형식: `[START][명령어][데이터][CRC][END]`
-- 예시:
-  - `"DOOR_UNLOCK"` → 문 열림 제어
-  - `"LIGHT_LOW"` → 조도에 따른 조명 제어
-  - `"SAVE_EEPROM"` → 사용자 설정 저장
-
 ---
 
 ## 🖼️ 시스템 구성도
