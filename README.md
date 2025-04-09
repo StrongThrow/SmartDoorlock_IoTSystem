@@ -54,6 +54,8 @@ PWM 제어를 통한 서보모터 자동창문 제어 등 다양한 임베디드
 
 ### 📡 UART 통신 프로토콜
 
+![데이터 패킷](https://github.com/user-attachments/assets/9cfdd1aa-5fc0-4941-acab-6f847fc951f8)
+
 - 형식: `[START][명령어][데이터][CRC][END]`
 - 예시:
   - `"DOOR_UNLOCK"` → 문 열림 제어
@@ -78,6 +80,16 @@ PWM 제어를 통한 서보모터 자동창문 제어 등 다양한 임베디드
   └── 사용자 설정 자동 실행
 ```
 
+## 🔎 흐름도
+
+- **도어락 흐름도**  
+  ![도어락 흐름도](https://github.com/user-attachments/assets/eca38503-9179-4801-8206-e4cc7ae823ed)
+
+- **제어부 회로도**  
+  ![제어부 흐름도](https://github.com/user-attachments/assets/073a3634-ddd3-48bc-ad6d-1f4c42ba70f1)
+
+---
+
 ---
 
 ## 🧾 회로도
@@ -86,11 +98,16 @@ PWM 제어를 통한 서보모터 자동창문 제어 등 다양한 임베디드
   ![도어락 회로도](https://github.com/user-attachments/assets/ece91a11-e34d-447f-a80c-1111ed658291)
 
 - **제어부 회로도**  
-  ![제어부 회로도](https://github.com/user-attachments/assets/832fc948-5dd8-47a6-b7ee-9e728564179a)
+  ![제어부 회로도 1](https://github.com/user-attachments/assets/832fc948-5dd8-47a6-b7ee-9e728564179a)
+  ![제어부 회로도 2](https://github.com/user-attachments/assets/6c017a06-4fd7-4e65-bff9-c2e50f12ec17)
+
 
 ---
 
 ## ⚙️ 개발 환경
+
+![개발환경](https://github.com/user-attachments/assets/658e5c49-5000-4e5a-887a-8bd084c46f9a)
+
 
 | 항목     | 내용            |
 |----------|-----------------|
